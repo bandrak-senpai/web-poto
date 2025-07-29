@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Kenangan Kita</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Tampilan Awal */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://files.catbox.moe/0hog84.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+
+        .welcome-content {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .welcome-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .enter-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tampilan Utama */
+        .main-content {
+            display: none;
+            height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100% - 120px);
+            padding: 1rem;
+        }
+
+        .frame {
+            width: 90%;
+            max-width: 800px;
+            height: 70vh;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 15px solid transparent;
+            border-image: url('https://files.catbox.moe/07h9tr.jpg') 30 round;
+        }
+
+        .photo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            transition: opacity 0.8s ease;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #ff8a00 0%, #e52e71 100%);
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .music-control p {
+            display: none;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .caption {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-style: italic;
+            max-width: 600px;
+            padding: 0 1rem;
+            transition: opacity 0.5s ease;
+        }
+
+        @media (min-width: 768px) {
+            .header {
+                padding: 2rem 0;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .controls {
+                gap: 2rem;
+            }
+            .btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            .music-control p {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tampilan Awal -->
+    <div class="welcome-screen" id="welcome-screen">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Galeri Kenangan Kita</h1>
+            <p class="welcome-message">Kumpulan momen berharga yang tak terlupakan</p>
+            <button class="enter-btn" id="enter-btn">Masuk ke Galeri</button>
+        </div>
+    </div>
+
+    <!-- Tampilan Utama -->
+    <div class="main-content" id="main-content">
+        <div class="header">
+            <h1>Galeri Kenangan Kita</h1>
+        </div>
+
+        <div class="gallery-container">
+            <div class="frame">
+                <img id="current-photo" class="photo" src="https://files.catbox.moe/07h9tr.jpg" alt="Kenangan" style="opacity:1">
+                <img id="next-photo" class="photo" src="" alt="Kenangan Berikutnya" style="opacity:0">
+            </div>
+
+            <p class="caption" id="photo-caption">Kenangan indah yang takkan terlupakan</p>
+
+            <div class="controls">
+                <button class="btn" id="next-btn">
+                    Foto Berikutnya
+                </button>
+                <button class="btn btn-download" id="download-btn">
+                    Download Tanpa Bingkai
+                </button>
+            </div>
+        </div>
+
+        <div class="music-control">
+            <p>Musik Kenangan</p>
+            <audio controls loop id="bg-music">
+                <source src="https://files.catbox.moe/tmi478.m4a" type="audio/mp4">
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        // Data foto dan caption
+        const photos = [
+            {
+                framed: "https://files.catbox.moe/07h9tr.jpg",
+                unframed: "https://files.catbox.moe/07h9tr.jpg",
+                caption: "Momen pertama kita bersama, penuh tawa dan keceriaan"
+            },
+            {
+                framed: "https://files.catbox.moe/33ydv0.jpg",
+                unframed: "https://files.catbox.moe/0kkwik.jpg",
+                caption: "Petualangan seru yang takkan terlupakan"
+            },
+            {
+                framed: "https://files.catbox.moe/z8qf2p.jpg",
+                unframed: "https://files.catbox.moe/xkasnk.jpg",
+                caption: "Senyuman yang membuat hari lebih cerah"
+            },
+            {
+                framed: "https://files.catbox.moe/w55zmt.jpg",
+                unframed: "https://files.catbox.moe/083n6f.jpg",
+                caption: "Bersama dalam suka dan duka"
+            },
+            {
+                framed: "https://files.catbox.moe/p4fdap.jpg",
+                unframed: "https://files.catbox.moe/r2duqm.jpg",
+                caption: "Kenangan manis yang selalu dirindukan"
+            },
+            {
+                framed: "https://files.catbox.moe/dmfoo6.jpg",
+                unframed: "https://files.catbox.moe/wtokda.jpg",
+                caption: "Kenangan manis yang selalu dirindukan"
+            },
+            {
+                framed: "https://files.catbox.moe/rqjq1u.jpg",
+                unframed: "https://files.catbox.moe/h5atxe.jpg",
+                caption: "Kebersamaan yang penuh makna"
+            },
+            {
+                framed: "https://files.catbox.moe/fuusy5.jpg",
+                unframed: "https://files.catbox.moe/v82rq1.jpg",
+                caption: "Momen berharga yang tak ternilai"
+            },
+            {
+                framed: "https://files.catbox.moe/z95fh9.jpg",
+                unframed: "https://files.catbox.moe/1wbdlv.jpg",
+                caption: "Persahabatan yang tak tergantikan"
+            },
+            {
+                framed: "https://files.catbox.moe/hod0fi.jpg",
+                unframed: "https://files.catbox.moe/44ul5d.jpg",
+                caption: "Kebersamaan yang selalu dinanti"
+            },
+            {
+                framed: "https://files.catbox.moe/kgqum1.jpg",
+                unframed: "https://files.catbox.moe/emwswo.jpg",
+                caption: "Kenangan manis di setiap sudut"
+            },
+            {
+                framed: "https://files.catbox.moe/1gg9q0.jpg",
+                unframed: "https://files.catbox.moe/oc55bs.jpg",
+                caption: "Momen yang membuat hati hangat"
+            },
+            {
+                framed: "https://files.catbox.moe/xvps2u.jpg",
+                unframed: "https://files.catbox.moe/glk11a.jpg",
+                caption: "Cerita indah yang terus berlanjut"
+            },
+            {
+                framed: "https://files.catbox.moe/76tmci.jpg",
+                unframed: "https://files.catbox.moe/c5b9vd.jpg",
+                caption: "Kebahagiaan sederhana yang berarti"
+            },
+            {
+                framed: "https://files.catbox.moe/pix0ze.jpg",
+                unframed: "https://files.catbox.moe/qpu5xc.jpg",
+                caption: "Kenangan yang takkan pudar oleh waktu"
+            },
+            {
+                framed: "https://files.catbox.moe/x8svnz.jpg",
+                unframed: "https://files.catbox.moe/rk5s6h.jpg",
+                caption: "Persahabatan sejati yang abadi"
+            },
+            {
+                framed: "https://files.catbox.moe/uhv8lo.jpg",
+                unframed: "https://files.catbox.moe/rjooa8.jpg",
+                caption: "Tawa yang menggetarkan jiwa"
+            },
+            {
+                framed: "https://files.catbox.moe/j4g8u8.jpg",
+                unframed: "https://files.catbox.moe/1pm2th.jpg",
+                caption: "Akhir yang indah untuk kenangan manis"
+            },
+            {
+                framed: "https://files.catbox.moe/d3q8qf.jpg",
+                unframed: "https://files.catbox.moe/d3q8qf.jpg",
+                caption: "Terima kasih untuk semua kenangan indah ini"
+            }
+        ];
+
+        // Elemen DOM
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const enterBtn = document.getElementById('enter-btn');
+        const mainContent = document.getElementById('main-content');
+        const currentPhoto = document.getElementById('current-photo');
+        const nextPhotoImg = document.getElementById('next-photo');
+        const nextBtn = document.getElementById('next-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const photoCaption = document.getElementById('photo-caption');
+        const bgMusic = document.getElementById('bg-music');
+
+        // Variabel state
+        let currentIndex = 0;
+        let isTransitioning = false;
+
+        // Fungsi untuk memulai galeri
+        function startGallery() {
+            // Sembunyikan welcome screen
+            welcomeScreen.style.opacity = '0';
+            
+            // Setelah animasi fade out selesai
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // Coba play musik otomatis
+                playMusic();
+            }, 1000);
+        }
+
+        // Fungsi untuk play musik
+        function playMusic() {
+            bgMusic.volume = 0.3;
+            
+            // Coba play langsung
+            const playPromise = bgMusic.play();
+            
+            // Tangani jika autoplay dicegah
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // Jika dicegah, tunggu interaksi user
+                    const enableMusic = () => {
+                        bgMusic.play();
+                        document.removeEventListener('click', enableMusic);
+                    };
+                    document.addEventListener('click', enableMusic);
+                });
+            }
+        }
+
+        // Fungsi untuk memuat foto berikutnya
+        function loadNextPhoto() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            
+            const nextIndex = (currentIndex + 1) % photos.length;
+            
+            // Fade out caption
+            photoCaption.style.opacity = '0';
+            
+            // Preload foto berikutnya
+            nextPhotoImg.src = photos[nextIndex].framed;
+            
+            // Setelah foto berikutnya dimuat
+            nextPhotoImg.onload = () => {
+                // Fade out foto saat ini dan fade in foto berikutnya
+                currentPhoto.style.opacity = '0';
+                nextPhotoImg.style.opacity = '1';
+                
+                // Setelah transisi selesai
+                setTimeout(() => {
+                    // Update foto utama
+                    currentPhoto.src = nextPhotoImg.src;
+                    currentPhoto.style.opacity = '1';
+                    nextPhotoImg.style.opacity = '0';
+                    
+                    // Update caption
+                    photoCaption.textContent = photos[nextIndex].caption;
+                    photoCaption.style.opacity = '1';
+                    
+                    // Update index
+                    currentIndex = nextIndex;
+                    isTransitioning = false;
+                }, 800);
+            };
+        }
+
+        // Fungsi untuk download foto
+        function downloadPhoto() {
+            const link = document.createElement('a');
+            link.href = photos[currentIndex].unframed;
+            link.download = `kenangan_${currentIndex + 1}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Event listeners
+        enterBtn.addEventListener('click', startGallery);
+        nextBtn.addEventListener('click', loadNextPhoto);
+        downloadBtn.addEventListener('click', downloadPhoto);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                loadNextPhoto();
+            }
+        });
+
+        // Inisialisasi
+        photoCaption.textContent = photos[0].caption;
+    </script>
+</body>
+</html>
